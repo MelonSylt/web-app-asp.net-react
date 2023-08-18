@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
-import Card from '../App/Card.jsx'; // Update the path accordingly
-
+import Card from './Card.jsx';
 export default class App extends Component {
-    // ... rest of your component code ...
+    static displayName = App.name;
+
+    constructor(props) {
+        super(props);
+        this.state = { articles: [], loading: true };
+    }
+
+    componentDidMount() {
+        this.populateArticleData();
+    }
+
+  
 
     render() {
         let contents = this.state.loading
@@ -14,6 +24,8 @@ export default class App extends Component {
                             <Card
                                 key={article.title}
                                 title={article.title}
+                                link={article.link}
+                                published={article.published}
                                 summary={article.summary}
                             />
                         ))}
@@ -30,6 +42,9 @@ export default class App extends Component {
         );
     }
 
-    // ... rest of your component code ...
+    async populateArticleData() {
+        const response = await fetch('/home');
+        const data = await response.json();
+        this.setState({ articles: data, loading: false });
+    }
 }
-
